@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    /* File Layout - Essential for professional structure */
+    "rootDir": "./src",                          
+    "outDir": "./dist",                         
+
+    /* Environment Settings */
+    "target": "ESNext",                          // Modern JS output
+    "module": "NodeNext",                        // Mandatory for modern Node.js
+    "moduleResolution": "NodeNext",              
+    "lib": ["ESNext"],
+    "types": ["node"],                           // Explicitly include Node types
+
+    /* Interop & Security */
+    "esModuleInterop": true,                     // Fixes "module.exports" compatibility
+    "forceConsistentCasingInFileNames": true,     
+    "skipLibCheck": true,                        // Speeds up compilation
+
+    /* Stricter Typechecking (Your original settings - Keep them!) */
+    "strict": true,                              // The "No-Cheating" mode
+    "noUncheckedIndexedAccess": true,            
+    "exactOptionalPropertyTypes": true,
+    "isolatedModules": true,                     // Ensures each file can be safely transpiled
+
+    /* Metadata for Debugging */
+    "sourceMap": true,                           // Essential for debugging TS in production
+    "declaration": true                          // Generates .d.ts files for your API
+  },
+  "include": ["src/**/*"],                       // Only compile what's in src
+  "exclude": ["node_modules", "dist"]            // Ignore these folders
+}
