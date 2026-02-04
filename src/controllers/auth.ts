@@ -1,0 +1,24 @@
+import { Request, Response } from "express";
+import { LoginSchema,RegisterSchema } from "../schemas/auth.js";
+import {catchAsync} from "../utils/catchAsync.js";
+
+export const handleRegister = catchAsync(async (req: Request, res: Response) => {
+    const { name, email, password } = req.body;
+    console.log(`Registering user: ${email}`);
+
+    return res.status(201).json({ message: "User Created Successfully" });
+});
+export const handleLogin = catchAsync( async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    // 2. Logic (To be implemented): 
+    // - Find user by email in Prisma
+    // - Compare hashed password with bcrypt
+    // - Generate JWT if valid
+    console.log(`Login attempt for: ${email}`);
+
+    return res.status(200).json({ 
+        status: "success", 
+        message: "Login Successful" 
+    });
+});
