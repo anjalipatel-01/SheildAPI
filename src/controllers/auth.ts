@@ -10,11 +10,6 @@ export const handleRegister = catchAsync(async (req: Request, res: Response) => 
 });
 export const handleLogin = catchAsync( async (req: Request, res: Response) => {
     const { email, password } = req.body;
-
-    // 2. Logic (To be implemented): 
-    // - Find user by email in Prisma
-    // - Compare hashed password with bcrypt
-    // - Generate JWT if valid
     console.log(`Login attempt for: ${email}`);
 
     return res.status(200).json({ 
