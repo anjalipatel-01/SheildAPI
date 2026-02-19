@@ -17,10 +17,10 @@ model User {
   name       String?
   email      String   @unique
   password   String
-  roleId     String   // Changed from role_id to match the relation
+  roleId     String   
   role       Role     @relation(fields: [roleId], references: [id])
   createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt // Fixed the attribute name
+  updatedAt  DateTime @updatedAt 
 }
 
 model Role {
@@ -42,5 +42,5 @@ model RolePermission {
   role         Role       @relation(fields: [roleId], references: [id])
   permission   Permission @relation(fields: [permissionId], references: [id])
 
-  @@id([roleId, permissionId]) // Now matches the field names above
+  @@id([roleId, permissionId]) 
 }

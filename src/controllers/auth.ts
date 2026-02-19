@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { LoginSchema,RegisterSchema } from "../schemas/auth.js";
+import { registerUser } from "../services/auth.js";
 import {catchAsync} from "../utils/catchAsync.js";
 
 export const handleRegister = catchAsync(async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
-    console.log(`Registering user: ${email}`);
-
+    const newuser = await registerUser(req.body);
     return res.status(201).json({ message: "User Created Successfully" });
 });
 export const handleLogin = catchAsync( async (req: Request, res: Response) => {
