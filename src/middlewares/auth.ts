@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodTypeAny, ZodError } from "zod";
 import { verifyToken } from "../utils/jwt.js";
+import { AuthUser } from "../types/authUser.js";
 export const validate = (schema: ZodTypeAny) => (req: Request, res: Response, next: NextFunction) => {
     try {
         schema.parse(req.body);
@@ -35,7 +36,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
                 message: "Invalid or expired token"
             });
         }
-        req.user = decoded;
+        req.user = decoded as AuthUser;
         next();
     } catch (error) {
         return res.status(401).json({
