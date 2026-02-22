@@ -2,6 +2,8 @@ import { Router } from "express";
 import { authenticateToken } from "../middlewares/auth.js";
 import { restrictTo } from "../middlewares/role.js";
 import { checkApiKey } from "../middlewares/apiKey.js";
+import { globalLimiter, sensitiveLimiter } from '../middlewares/rateLimit.js';
+
 import {
     handleCreateResource,
     handleGetResource,
@@ -20,21 +22,20 @@ import {
 
 const router = Router();
 
-router.get("/access", checkApiKey, handleExternalAccess);
+router.get("/access", globalLimiter, checkApiKey, handleExternalAccess);
 
-// USER routes
-router.post("/", authenticateToken, handleCreateResource);
-router.get("/", authenticateToken, restrictTo("USER"), handleGetResource);
-router.post("/:id/generate-key", authenticateToken, restrictTo("USER"), handleGenerateApiKey);
-router.patch("/:id", authenticateToken, restrictTo("USER"), handleUpdateResource);
-router.delete("/:id", authenticateToken, restrictTo("USER"), handleDeleteResource);
+router.post("/", authenticateToken, globalLimiter, handleCreateResource);
+router.get("/", authenticateToken, restrictTo("USER"), globalLimiter, handleGetResource);
+router.post("/:id/generate-key", authenticateToken, restrictTo("USER"), sensitiveLimiter, handleGenerateApiKey);
+router.patch("/:id", authenticateToken, restrictTo("USER"), globalLimiter, handleUpdateResource);
+router.delete("/:id", authenticateToken, restrictTo("USER"), globalLimiter, handleDeleteResource);
 
-// ADMIN routes
 router.use(authenticateToken, restrictTo("ADMIN"));
-router.post("/admin", handleAdminCreateResource);
-router.get("/admin/all", handleGetAllResources);
-router.patch("/admin/:id", handleAdminUpdateResource);
-router.delete("/admin/purge-all", handleDeleteAllResources);
-router.delete("/admin/:id", handleAdminDeleteResource);
+
+router.post("/admin", globalLimiter, handleAdminCreateResource);
+router.get("/admin/all", globalLimiter, handleGetAllResources);
+router.patch("/admin/:id", globalLimiter, handleAdminUpdateResource);
+router.delete("/admin/purge-all", sensitiveLimiter, handleDeleteAllResources);
+router.delete("/admin/:id", globalLimiter, handleAdminDeleteResource);
 
 export default router;
