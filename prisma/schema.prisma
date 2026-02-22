@@ -56,3 +56,11 @@ model Resource {
   apiKey      String?  @unique
   createdAt   DateTime @default(now())
 }
+model AuditLog {
+  id         String   @id @default(uuid())
+  adminId    String
+  action     String   
+  targetId   String?  // The ID of the resource affected
+  details    String?  // JSON stringified metadata
+  timestamp  DateTime @default(now())
+}
