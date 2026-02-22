@@ -3,6 +3,7 @@ import { authenticateToken } from "../middlewares/auth.js";
 import { restrictTo } from "../middlewares/role.js";
 import { checkApiKey } from "../middlewares/apiKey.js";
 import { globalLimiter, sensitiveLimiter } from '../middlewares/rateLimit.js';
+import { validateCache } from "../middlewares/cache.js";
 
 import {
     handleCreateResource,
@@ -25,7 +26,7 @@ const router = Router();
 router.get("/access", globalLimiter, checkApiKey, handleExternalAccess);
 
 router.post("/", authenticateToken, globalLimiter, handleCreateResource);
-router.get("/", authenticateToken, restrictTo("USER"), globalLimiter, handleGetResource);
+router.get("/", authenticateToken, restrictTo("USER"), globalLimiter, validateCache, handleGetResource);
 router.post("/:id/generate-key", authenticateToken, restrictTo("USER"), sensitiveLimiter, handleGenerateApiKey);
 router.patch("/:id", authenticateToken, restrictTo("USER"), globalLimiter, handleUpdateResource);
 router.delete("/:id", authenticateToken, restrictTo("USER"), globalLimiter, handleDeleteResource);
