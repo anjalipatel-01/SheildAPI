@@ -53,5 +53,6 @@ model Resource {
   secretData  String   
   userId      String  
   user        User     @relation(fields: [userId], references: [id])
+  apiKey      String?  @unique
   createdAt   DateTime @default(now())
 }
