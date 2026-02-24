@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+
+import { prisma } from "../utils/prisma.js";
 //create 
 export const createResourceByAdmin = async (data: { name: string; secretData: string; targetUserId: string }) => {
     return await prisma.resource.create({
@@ -38,4 +38,11 @@ export const deleteResourceByAdmin = async (resourceId: string) => {
 };
 export const purgeAllResources = async () => {
     return await prisma.resource.deleteMany({});
+};
+
+//audit logs
+export const getAllAuditLogs = async () => {
+    return await prisma.auditLog.findMany({
+        orderBy: { timestamp: "desc" }
+    });
 };

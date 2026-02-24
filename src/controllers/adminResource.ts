@@ -6,7 +6,7 @@ import { createAuditLog } from "../utils/logg.js";
 export const handleAdminCreateResource = catchAsync(async (req: Request, res: Response) => {
     const { name, secretData, targetUserId } = req.body;
     const adminId = req.user?.id as string;
-    
+
     if (!targetUserId) {
         return res.status(400).json({
             status: "fail",
@@ -46,7 +46,7 @@ export const handleGetAllResources = catchAsync(async (req: Request, res: Respon
 export const handleAdminUpdateResource = catchAsync(async (req: Request, res: Response) => {
     const id = req.params.id as string;
     const adminId = req.user?.id as string;
-    
+
     const updatedResource = await resourceService.updateResourceByAdmin(id, req.body);
 
     createAuditLog(adminId, "ADMIN_UPDATE", id);
@@ -72,7 +72,7 @@ export const handleAdminDeleteResource = catchAsync(async (req: Request, res: Re
     });
 });
 
-export const handleDeleteAllResources = catchAsync(async(req:Request,res:Response)=>{
+export const handleDeleteAllResources = catchAsync(async (req: Request, res: Response) => {
     const adminId = req.user?.id as string;
     const result = await resourceService.purgeAllResources();
 
@@ -86,3 +86,13 @@ export const handleDeleteAllResources = catchAsync(async(req:Request,res:Respons
         }
     });
 })
+
+export const handleGetAuditLogs = catchAsync(async (req: Request, res: Response) => {
+    const logs = await resourceService.getAllAuditLogs();
+
+    res.status(200).json({
+        status: "success",
+        results: logs.length,
+        data: { logs }
+    });
+});

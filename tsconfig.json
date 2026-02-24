@@ -30,12 +30,6 @@
     /* Metadata for Debugging */
     "sourceMap": true, // Essential for debugging TS in production
     "declaration": true, // Generates .d.ts files for your API
-    /* Prisma v7 — redirect @prisma/client to the real generated typed client */
-    "paths": {
-      "@prisma/client": [
-        "node_modules/.prisma/client/index.d.ts"
-      ]
-    }
   },
   "include": [
     "src/**/*"

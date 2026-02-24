@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { ZodTypeAny, ZodError } from "zod";
 import { verifyToken } from "../utils/jwt.js";
 import { AuthUser } from "../types/authUser.js";
-export const validate = (schema: ZodTypeAny) => (req: Request, res: Response, next: NextFunction) => {
+export const validate = (schema?: ZodTypeAny, paramsSchema?: ZodTypeAny) => (req: Request, res: Response, next: NextFunction) => {
     try {
-        schema.parse(req.body);
+        if (paramsSchema) paramsSchema.parse(req.params);
+        if (schema) schema.parse(req.body);
         next();
     } catch (error) {
         if (error instanceof ZodError) {

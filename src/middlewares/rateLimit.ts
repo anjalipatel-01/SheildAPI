@@ -3,8 +3,8 @@ import RedisStore from 'rate-limit-redis';
 import { createClient } from 'redis';
 
 // 1. Initialize Redis Client with Error Handling
-export const redisClient = createClient({ 
-    url: process.env.REDIS_URL || 'redis://localhost:6379' 
+export const redisClient = createClient({
+    url: process.env.REDIS_URL || 'redis://localhost:6379'
 });
 
 redisClient.on('error', (err) => console.error('Redis Client Error', err));
@@ -45,7 +45,7 @@ export const sensitiveLimiter = rateLimit({
     },
     // We also use Redis store here to prevent "hopping" workers to reset limits
     store: new RedisStore({
-        
+
         sendCommand: (...args: string[]) => redisClient.sendCommand(args),
     }),
 });

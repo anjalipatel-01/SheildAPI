@@ -1,5 +1,6 @@
 import { catchAsync } from "../utils/catchAsync.js";
 import { Request, Response } from "express";
+import { AppError } from "../utils/AppError.js";
 import { invalidateCache } from "../utils/cache.js";
 import * as resourceService from "../services/resource.js";
 
@@ -8,9 +9,9 @@ export const handleCreateResource = catchAsync(async (req: Request, res: Respons
     const userId = req.user?.id as string;
     const resource = await resourceService.createResource({
         ...req.body,
-        userId: userId 
+        userId: userId
     });
-    
+
     await invalidateCache(userId);
 
     res.status(201).json({
@@ -23,7 +24,7 @@ export const handleCreateResource = catchAsync(async (req: Request, res: Respons
 export const handleGetResource = catchAsync(async (req: Request, res: Response) => {
     const userId = req.user?.id;
     if (!userId) {
-        throw new Error("User identification failed");
+        throw new AppError("User identification failed", 401);
     }
     const resource = await resourceService.getResource(userId);
     res.status(200).json({
@@ -37,9 +38,9 @@ export const handleGetResource = catchAsync(async (req: Request, res: Response) 
 export const handleUpdateResource = catchAsync(async (req: Request, res: Response) => {
     const resourceId = req.params.id as string;
     const userId = req.user?.id as string;
-    
+
     const result = await resourceService.updateResource(resourceId, userId, req.body);
-    
+
     if (result.count === 0) {
         return res.status(404).json({
             status: "fail",
@@ -57,11 +58,11 @@ export const handleUpdateResource = catchAsync(async (req: Request, res: Respons
 
 // DELETE
 export const handleDeleteResource = catchAsync(async (req: Request, res: Response) => {
-    const userId = req.user?.id as string; 
+    const userId = req.user?.id as string;
     const resourceId = req.params.id as string;
 
     if (!userId || !resourceId) {
-        throw new Error("Missing user or resource identification");
+        throw new AppError("Missing user or resource identification", 400);
     }
 
     await resourceService.deleteResource(resourceId, userId);
@@ -77,9 +78,9 @@ export const handleDeleteResource = catchAsync(async (req: Request, res: Respons
 export const handleGenerateApiKey = catchAsync(async (req: Request, res: Response) => {
     const resourceId = req.params.id as string;
     const userId = req.user?.id as string;
-    
+
     const rawKey = await resourceService.generateApiKey(resourceId, userId);
-    
+
     await invalidateCache(userId);
 
     res.status(200).json({

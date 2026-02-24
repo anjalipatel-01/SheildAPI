@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+
+import { AppError } from "../utils/AppError.js";
+import { prisma } from "../utils/prisma.js";
 import crypto from "crypto";
 import bcrypt from "bcrypt";
 export const createResource = async (data: { name: string, secretData: string, userId: string }) => {
@@ -55,7 +56,7 @@ export const generateApiKey = async (resourceId: string, userId: string) => {
         where: { id: resourceId }
     });
     if (!resource || resource.userId !== userId) {
-        throw new Error("Resource not found or unauthorized");
+        throw new AppError("Resource not found or unauthorized", 404);
     }
 
     const rawKey = `shld_${crypto.randomBytes(24).toString('hex')}`;
